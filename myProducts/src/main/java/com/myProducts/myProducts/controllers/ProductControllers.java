@@ -53,5 +53,16 @@ public class ProductControllers {
         }
 
     }
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Object>deleteProduct(@PathVariable(value = "productId")UUID productId){
+        Optional<ProductModel> product = productService.getOneProduct(productId);
+        if (product.isPresent()){
+            productService.deletProduct(productId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+    }
 
 }

@@ -13,4 +13,6 @@ public interface ProductService {
     List<ProductModel> getAllProducts();
 
     Optional<ProductModel> getOneProduct(UUID productId);
+
+    void deletProduct(UUID productId);
 }
