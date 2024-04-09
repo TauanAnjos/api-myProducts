@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,6 +31,22 @@ public class ProductControllers {
     public ResponseEntity<Object>getOneProduct(@PathVariable(value = "productId")UUID productId){
         Optional<ProductModel> product = productService.getOneProduct(productId);
         if (product.isPresent()){
+            return ResponseEntity.status(HttpStatus.OK).body(product);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+    }
+    @PutMapping("/{productId}")
+    public ResponseEntity<Object>updateProduct(@PathVariable(value = "productId")UUID productId, @RequestBody ProductModel dataResquestProduct){
+        Optional<ProductModel> product = productService.getOneProduct(productId);
+        if (product.isPresent()){
+            ProductModel productUpdate = product.get();
+            productUpdate.setName(dataResquestProduct.getName());
+            productUpdate.setDescription(dataResquestProduct.getDescription());
+            productUpdate.setProductType(dataResquestProduct.getProductType());
+            productUpdate.setLastUpdateDate(LocalDateTime.now());
+            productService.saveProduct(productUpdate);
             return ResponseEntity.status(HttpStatus.OK).body(product);
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
